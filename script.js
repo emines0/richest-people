@@ -24,7 +24,10 @@ createList();
 // Insert List items into DOM
 function createList() {
   [...richiestPeople] // ... means copy the list (spread operator)
-    .forEach((person, index) => {
+  .map(a => ({value: a, sort:Math.random()})) // map take array and allow us to create a new array of objects {a=name, sort=random decimal based on which they will be sorterted (in this case randomly)}
+  .sort((a,b) => a.sort - b.sort) // sort them based on asc based on sort value
+  .map(a => a.value) // map them back to the array of strings (values=names)
+  .forEach((person, index) => {
       const listItem = document.createElement('li');
 
       listItem.setAttribute('data-index', index);
@@ -37,6 +40,7 @@ function createList() {
         </div>
       `;
 
+      // Pushing each created item to the arrah of list items ()
       listItems.push(listItem);
 
       draggable_list.appendChild(listItem);
