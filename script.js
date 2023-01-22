@@ -31,7 +31,7 @@ function createList() {
       const listItem = document.createElement('li');
 
 
-      listItem.setAttribute('data-index', index);
+      listItem.setAttribute('data-index', index); // add to custom attribute data-index value of index 
 
       listItem.innerHTML = `
         <span class="number">${index + 1}</span> 
@@ -45,5 +45,67 @@ function createList() {
       listItems.push(listItem);
 
       draggable_list.appendChild(listItem);
-    })
+    });
+
+    addEventListeners();
 }
+
+// Drag and Drop https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+
+function dragStart() {
+  // console.log('Event: ', 'dragstart');
+  dragStartIndex = this.closest('li').getAttribute('data-index');
+
+}
+
+function dragEnter() {
+  // console.log('Event: ', 'dragenter');
+  this.classList.add('over');
+}
+
+function dragLeave() {
+  // console.log('Event: ', 'dragleave');
+  this.classList.remove('over');
+
+  
+}
+
+function dragOver(e) {
+  // console.log('Event: ', 'dragover');
+  e.preventDefault();
+}
+
+function dragDrop() {
+  // console.log('Event: ', 'drop');
+  const dragEndIndex = this.getAttribute('data-index');
+  // swap indexes
+  swapItems(dragStartIndex, dragEndIndex);
+  this.classList.remove('over')
+}
+
+// Swap indexes
+function swapItems(fromIndex, toIndex) {
+  const itemOne = listItems[fromIndex].querySelector('.draggable');
+  const itemTwo = listItems[toIndex].querySelector('.draggable');
+
+  listItems[fromIndex].appendChild(itemTwo);
+  listItems[toIndex].appendChild(itemOne);
+}
+
+function addEventListeners() {
+  const draggables = document.querySelectorAll('.draggable');
+  const dragListItems = document.querySelectorAll('.draggable-list li');
+
+  draggables.forEach(draggable => {
+    draggable.addEventListener('dragstart', dragStart);
+  });
+
+  dragListItems.forEach(item => {
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('drop', dragDrop);
+    item.addEventListener('dragenter', dragEnter);
+    item.addEventListener('dragleave', dragLeave);
+  });
+
+}
+
