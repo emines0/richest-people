@@ -1,6 +1,7 @@
 const draggable_list = document.getElementById('draggable-list');
 const check = document.getElementById('check');
 
+// List of richiest people in the correct order
 const richiestPeople = [
   'Jeff Bezos',
   'Bill Gates',
@@ -25,7 +26,7 @@ createList();
 function createList() {
   [...richiestPeople] // ... means copy the list (spread operator)
   .map(a => ({value: a, sort:Math.random()})) // map take array and allow us to create a new array of objects {a=name, sort=random decimal based on which they will be sorterted (in this case randomly)}
-  .sort((a,b) => a.sort - b.sort) // sort them based on asc based on sort value
+  .sort((a,b) => a.sort - b.sort) 
   .map(a => a.value) // map them back to the array of strings (values=names)
   .forEach((person, index) => {
       const listItem = document.createElement('li');
@@ -80,16 +81,32 @@ function dragDrop() {
   const dragEndIndex = this.getAttribute('data-index');
   // swap indexes
   swapItems(dragStartIndex, dragEndIndex);
-  this.classList.remove('over')
+  this.classList.remove('over');
+  checkOrder();
 }
 
-// Swap indexes
+// Swap list items that are drag and drop
 function swapItems(fromIndex, toIndex) {
   const itemOne = listItems[fromIndex].querySelector('.draggable');
   const itemTwo = listItems[toIndex].querySelector('.draggable');
 
   listItems[fromIndex].appendChild(itemTwo);
   listItems[toIndex].appendChild(itemOne);
+}
+
+// Check the order of list items 
+function checkOrder() {
+  listItems.forEach((listItem, index) => {
+    const personName = listItem.querySelector('.draggable').innerText.trim();
+
+    if(personName !== richiestPeople[index]) {
+      listItem.classList.add('wrong');
+    }else {
+      listItem.classList.remove('wrong');
+      listItem.classList.add('right');
+
+    }
+  });
 }
 
 function addEventListeners() {
@@ -109,3 +126,6 @@ function addEventListeners() {
 
 }
 
+
+
+check.addEventListener('click', checkOrder);
